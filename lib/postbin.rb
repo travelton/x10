@@ -159,7 +159,7 @@ Deleted #{bins_to_dl.length.to_s} bins and #{items_to_dl.length.to_s} items."
 
     def bin_it!
       if @auth && @auth.provided? && @auth.basic? && @auth.credentials
-        pass_replace = @auth.credentials[1].slice! 5..-1
+        pass_replace = @auth.credentials[1].slice! 0..4
         pass_replace.concat("********* (Hidden)")
         params.merge!({:username => @auth.credentials[0], :password => pass_replace})
       end
