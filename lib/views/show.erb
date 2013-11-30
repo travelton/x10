@@ -1,8 +1,12 @@
 <h2>Postbin #<%= @bin.url %></h2>
-<p>POST requests are displayed here, newest to oldest. When contacting support, please copy the link to reference a specific post.</p>
+<h5>URL:</h5><input type="text" name="bin" onClick="this.select();" style="width:250px" value="<%= "http://#{request.env['HTTP_HOST']}/#{@bin.url}" %>" class="key-value">
+<br><br>
+<p>HTTP Post requests are displayed here, newest to oldest. When sharing with support, please refer to the permalink within your request.
+</p>
+
 <% for item in @bin.items.reverse %>
   <div align='left'>
-    <a name="<%= item.id.to_s(36) %>"></a><a href="<%= @bin.url %>#<%= item.id.to_s(36) %>">#<%= item.id.to_s(36) %></a><br>
+    <a name="<%= item.id.to_s(36) %>"></a>Permalink: <a href="<%= "http://#{request.env['HTTP_HOST']}/#{@bin.url}" %>#<%= item.id.to_s(36) %>"><%= @bin.url %>#<%= item.id.to_s(36) %></a> - <%= Time.at(item.created_at).strftime("%m/%d/%Y @ %I:%M %p") %><br>
   </div>
   <table class="standard" style="word-wrap:break-word; table-layout: fixed;">
     <thead>
@@ -32,5 +36,13 @@
       <% end %>
     <% end %>
   </table>
-  <br><br>
+  <br>
 <% end %>
+<form action='/' method='get' id='new_bin'>
+  <input type='submit' name='New Postbin' value='New Postbin' class="rs-btn rs-btn-primary">
+<% if @bin.items.count > 0 %>
+or <a href="/<%= @bin.url %>/delete">Delete Bin</a></form>
+<% end %>
+<br><br>
+<br>
+<small><p><em>Data Disclaimer: Data posted to the Mailgun Postbin is public information and can be accessed by anyone on the internet. Please do not post any sensitive information here. If you accidentally expose data, please immediately delete the Postbin. We make no guarantee on the availability of this service and we reserve the right to delete Postbin data at any time. Currently Postbin data is held for 5 days max.</em></p></small>

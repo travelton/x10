@@ -34,6 +34,8 @@ module PostBin
       alias_method :h, :escape_html
     end
     
+  #Default Handler
+
     get '/' do
       bin = Bin.new
       url = bin.random_url
@@ -45,6 +47,67 @@ module PostBin
       bin.save!
       redirect bin.url
     end
+
+    #API Handlers
+
+    get '/api/new' do
+      bin = Bin.new
+      url = bin.random_url
+      until Bin.first(:url => url).nil?
+        url = bin.random_url
+      end
+      bin.url = url
+      bin.created_at = Time.now.to_i
+      bin.save!
+      content_type :json
+      {:url => "http://#{request.env['HTTP_HOST']}/#{bin.url}"}.to_json
+    end
+
+    get '/api/:id' do
+      @bin = Bin.first(:url => params[:id])
+      if not @bin
+        content_type :json
+        {:message => 'Sorry, Bin has expired or deleted. Create a new one.'}.to_json
+      else
+        content_type :json
+        @bin.items.to_json
+      end
+    end
+
+    delete '/api/:id/delete' do
+      @bin = Bin.first(:url => params[:id])
+      @bin.destroy
+      content_type :json
+      {:message => "Bin #{:id} deleted"}.to_json
+    end
+
+    get '/:id' do
+      @bin = Bin.first(:url => params[:id])
+      if not @bin
+        @message = "Sorry, couldn't find that PostBin, create a new one."
+        erb :error
+      else
+        erb :show
+      end
+    end
+
+    get '/:id/delete' do
+      @bin = Bin.first(:url => params[:id])
+      @bin.destroy
+      redirect '/'
+    end
+
+    #Web Handlers
+
+    post '/:bin_id' do
+      bin_it!
+    end
+
+    patch '/:bin_id' do
+      bin_it!
+    end
+
+    #Cleanup Handler
 
     get '/cleanup' do
       time_diff = Time.now.to_i - 432000
@@ -71,34 +134,30 @@ Deleted #{bins_to_dl.length.to_s} bins and #{items_to_dl.length.to_s} items."
       end
     end
 
-    get '/:id' do
-      @bin = Bin.first(:url => params[:id])
-      if not @bin
-        erb :error
-      else
-        erb :show
-      end
-    end
-
-    post '/:bin_id' do
-      bin_it!
-    end
-
-    patch '/:bin_id' do
-      bin_it!
-    end
-
     def bin_it!
       @bin = Bin.first(:url => params[:bin_id])
+      bin_count = @bin.items.count()
+      if bin_count == 20
+        params.replace({:message => 'Bin exceeded maximum posts. Create a new bin.'})
+        @bin.items.create(:params => params.to_json, :created_at => Time.now.to_i)
+        content_type :json
+        return {:message => 'Too many posts. Create a new bin!'}.to_json
+      elsif bin_count > 20
+        content_type :json
+        return {:message => 'Too many posts. Create a new bin!'}.to_json
+      end
+
       params.delete("bin_id")
       size = params.dup
+
       if size.to_s.size > 524288
         params.replace({:message => 'Post was too large. Maximum 1MB'})
-        @bin.items.create(:params => params.to_json)
-        "Too big!"
+        @bin.items.create(:params => params.to_json, :created_at => Time.now.to_i)
+        content_type :json
+        return {:message => 'Post too large. Try again!'}.to_json
       else
-        @bin.items.create(:params => params.to_json)
-        "Got it!"
+        @bin.items.create(:params => params.to_json, :created_at => Time.now.to_i)
+        return {:message => 'Post received. Thanks!'}.to_json
       end
     end
 

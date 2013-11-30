@@ -2,6 +2,7 @@ class Item
   include DataMapper::Resource
   property :id, Serial
   property :params, Text
+  property :created_at, Integer
   
   belongs_to :bin
   
