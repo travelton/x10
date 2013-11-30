@@ -1,0 +1,36 @@
+<h2>Postbin #<%= @bin.url %></h2>
+<p>POST requests are displayed here, newest to oldest. When contacting support, please copy the link to reference a specific post.</p>
+<% for item in @bin.items.reverse %>
+  <div align='left'>
+    <a name="<%= item.id.to_s(36) %>"></a><a href="<%= @bin.url %>#<%= item.id.to_s(36) %>">#<%= item.id.to_s(36) %></a><br>
+  </div>
+  <table class="standard" style="word-wrap:break-word; table-layout: fixed;">
+    <thead>
+      <tr>
+        <th width="20%">Parameter</th>
+        <th width="80%">Value<th>
+      </tr>
+    </thead>
+    <% if item.parsed_params.is_a?(String) %>
+      <%= item.parsed_params %>
+    <% else %> 
+      <% item.parsed_params.each do |k, v| %>
+        <tr class="even">
+          <td>
+            <strong><%= h(k) %></strong>
+          </td>
+          <td>
+            <div style="width:100%">
+              <% begin %>
+                <%= json(v) %>
+              <% rescue %>
+                <%== v %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+  <br><br>
+<% end %>
