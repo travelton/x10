@@ -78,7 +78,7 @@ module PostBin
       @bin = Bin.first(:url => params[:id])
       @bin.destroy!
       content_type :json
-      {:message => "Bin #{:id} deleted"}.to_json
+      {:message => "Bin #{@bin.url} deleted"}.to_json
     end
 
     get '/:id' do
