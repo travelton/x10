@@ -76,7 +76,7 @@ module PostBin
 
     delete '/api/:id/delete' do
       @bin = Bin.first(:url => params[:id])
-      @bin.destroy
+      @bin.destroy!
       content_type :json
       {:message => "Bin #{:id} deleted"}.to_json
     end
@@ -91,12 +91,6 @@ module PostBin
       end
     end
 
-    get '/:id/delete' do
-      @bin = Bin.first(:url => params[:id])
-      @bin.destroy
-      redirect '/'
-    end
-
     #Web Handlers
 
     post '/:bin_id' do
@@ -105,6 +99,15 @@ module PostBin
 
     patch '/:bin_id' do
       bin_it!
+    end
+
+    get '/:id/delete' do
+      @bin = Bin.first(:url => params[:id])
+      if @bin.destroy!
+        redirect '/'
+      else 
+        "Oops, error deleting. Email support@mailgunhq.com and we'll fix it."
+      end
     end
 
     #Cleanup Handler
