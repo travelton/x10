@@ -60,7 +60,7 @@ module PostBin
       bin.created_at = Time.now.to_i
       bin.save!
       content_type :json
-      {:url => "http://#{request.env['HTTP_HOST']}/#{bin.url}"}.to_json
+      {:url => "http://#{request.env['HTTP_HOST']}/api/#{bin.url}"}.to_json
     end
 
     get '/api/:id' do
@@ -74,7 +74,7 @@ module PostBin
       end
     end
 
-    delete '/api/:id/delete' do
+    delete '/api/:id' do
       @bin = Bin.first(:url => params[:id])
       @bin.destroy!
       content_type :json
@@ -94,6 +94,10 @@ module PostBin
     #Web Handlers
 
     post '/:bin_id' do
+      bin_it!
+    end
+
+    post '/api/:bin_id' do
       bin_it!
     end
 
