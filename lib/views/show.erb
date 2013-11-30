@@ -6,7 +6,7 @@
 
 <% for item in @bin.items.reverse %>
   <div align='left'>
-    <a name="<%= item.id.to_s(36) %>"></a>Permalink: <a href="<%= "http://#{request.env['HTTP_HOST']}/#{@bin.url}" %>#<%= item.id.to_s(36) %>"><%= @bin.url %>#<%= item.id.to_s(36) %></a> - <%= Time.at(item.created_at).strftime("%m/%d/%Y @ %I:%M %p") %><br>
+    <a name="<%= item.id.to_s(36) %>"></a>Permalink: <a href="<%= "http://#{request.env['HTTP_HOST']}/#{@bin.url}" %>#<%= item.id.to_s(36) %>"><%= @bin.url %>#<%= item.id.to_s(36) %></a> - <%= Time.at(item.created_at).strftime("%m/%d/%Y @ %I:%M %p") %> UTC<br>
   </div>
   <table class="standard" style="word-wrap:break-word; table-layout: fixed;">
     <thead>
