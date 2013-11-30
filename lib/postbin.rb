@@ -97,6 +97,14 @@ module PostBin
       bin_it!
     end
 
+    get '/utils/stats' do
+      item_count = Item.count()
+      bin_count = Bin.count()
+      total_rows = item_count + bin_count
+      content_type :json
+      {:total_bins => bin_count, :total_items => item_count, :total_rows => total_rows}.to_json
+    end
+
     patch '/:bin_id' do
       bin_it!
     end
@@ -112,7 +120,7 @@ module PostBin
 
     #Cleanup Handler
 
-    get '/cleanup' do
+    get '/utils/cleanup' do
       time_diff = Time.now.to_i - 432000
       @bins = Bin.all(:created_at.lt => time_diff)
       bins_to_dl = Array.new
