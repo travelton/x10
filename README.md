@@ -65,9 +65,13 @@ Creates a new Postbin
 GET http://bin.mailgun.net/:id  
 Returns formatted HTML
 
+##SDK Troubleshooting
+POST http://bin.mailgun.net/:id/*  
+Stores endpoint URL (anything in *), and authentication (pass obfuscated)  
+
 ##Utils
-GET http://bin.mailgun.net/utils/stats  
-Returns bin and item stats in JSON
+GET http://bin.mailgun.net/utils/stats   
+Returns bin and item stats in JSON  
 
 ```
 {

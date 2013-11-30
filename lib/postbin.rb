@@ -101,6 +101,14 @@ module PostBin
       bin_it!
     end
 
+    post '/:bin_id/*' do
+      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+      endpoint = params[:splat][0]
+      params.delete("splat")
+      params.merge!({:endpoint => endpoint})
+      bin_it!
+    end
+
     get '/utils/stats' do
       item_count = Item.count()
       bin_count = Bin.count()
@@ -150,6 +158,11 @@ Deleted #{bins_to_dl.length.to_s} bins and #{items_to_dl.length.to_s} items."
     end
 
     def bin_it!
+      if @auth && @auth.provided? && @auth.basic? && @auth.credentials
+        pass_replace = @auth.credentials[1].slice! 5..-1
+        pass_replace.concat("********* (Hidden)")
+        params.merge!({:username => @auth.credentials[0], :password => pass_replace})
+      end
       @bin = Bin.first(:url => params[:bin_id])
       bin_count = @bin.items.count()
       if bin_count == 20
