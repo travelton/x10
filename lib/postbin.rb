@@ -78,6 +78,9 @@ module PostBin
 
     delete '/api/:id' do
       @bin = Bin.first(:url => params[:id])
+      for item in @bin.items
+          item.destroy!
+      end
       @bin.destroy!
       content_type :json
       {:message => "Bin #{@bin.url} deleted"}.to_json
@@ -125,6 +128,9 @@ module PostBin
 
     get '/:id/delete' do
       @bin = Bin.first(:url => params[:id])
+      for item in @bin.items
+          item.destroy!
+      end
       if @bin.destroy!
         redirect '/'
       else 
