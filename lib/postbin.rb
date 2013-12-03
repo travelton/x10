@@ -6,6 +6,7 @@ Bundler.setup
 require 'sinatra/base'
 require 'data_mapper'
 require 'dm-postgres-adapter'
+require 'dm-mysql-adapter'
 require 'dm-migrations'
 require 'json'
 require 'erubis'
@@ -17,7 +18,7 @@ module PostBin
   end
   
   #DataMapper.setup(:default, 'postgres://dqgtksbyewjoon:Llwm4_Cz9CT6S18kO2O0FN2fEp@ec2-23-21-94-137.compute-1.amazonaws.com/d51j3fp8tdd23u')
-  DataMapper.setup(:default, 'mysql://dqgtksbyewjoon:Llwm4_Cz9CT6S18kO2O0FN2fEp@162.209.115.182/d51j3fp8tdd23u')
+  DataMapper.setup(:default, 'mysql://dqgtksbyewjoon:Llwm4_Cz9CT6S18kO2O0FN2fEp@162.209.114.172/d51j3fp8tdd23u')
 
   Dir[PostBin.current_path + "models/*.rb"].each { |f| require f }
   
