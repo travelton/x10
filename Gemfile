@@ -1,15 +1,10 @@
-source :rubygems
+source "https://rubygems.org"
 
 gem 'datamapper'
 gem 'dm-migrations'
 gem 'sinatra'
 gem 'erubis'
 
-group :development do
-  gem 'dm-sqlite-adapter'
-end
-
 group :production do
-  gem 'dm-postgres-adapter'
   gem 'dm-mysql-adapter'
 end
