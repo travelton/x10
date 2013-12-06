@@ -27,7 +27,7 @@ module X10
       status = params[:status]
       command = "bash /etc/cm19a/run.sh #{id} #{status}"
       exec(command) if fork.nil?
-      "Success"
+      redirect '/'
     end
   end
 end
