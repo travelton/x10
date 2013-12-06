@@ -23,7 +23,11 @@ module X10
     end
     
     get '/:id/:status' do
-      exec("bash /etc/cm19a/run.sh #{:id} #{:status}")
+      id = params[:id]
+      status = params[:status]
+      command = "bash /etc/cm19a/run.sh #{id} #{status}"
+      exec(command) if fork.nil?
+      "Success"
     end
   end
 end
