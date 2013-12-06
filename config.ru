@@ -1,7 +1,7 @@
 $:.unshift File.expand_path("#{File.dirname(__FILE__)}/lib")
 
-require "postbin"
+require "X10"
 
 map '/' do
-  run PostBin::App
+  run X10::App
 end
