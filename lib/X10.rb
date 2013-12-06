@@ -19,7 +19,7 @@ module X10
     end
 
     get '/' do
-      "Hello"
+      erb :index
     end
     
     get '/:id/:status' do
